@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monitoring des connexions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============ ÉCRAN D'ACCÈS (création du compte / connexion) ============ -->
+  <section class="acces" id="ecranAcces">
+    <div class="acces-carte">
+
+      <div class="signal" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <h1>Monitoring des connexions</h1>
+
+      <!-- Première utilisation : définir le nom d'utilisateur et le mot de passe -->
+      <form id="formCreation" autocomplete="off" hidden>
+        <h2>Créer votre accès</h2>
+        <p class="aide">À faire une seule fois sur ce téléphone.</p>
+
+        <label for="nouvelUtilisateur">Nom d'utilisateur</label>
+        <input type="text" id="nouvelUtilisateur" autocomplete="username" autocapitalize="none" required minlength="3">
+
+        <label for="nouveauMotDePasse">Mot de passe (6 caractères minimum)</label>
+        <input type="password" id="nouveauMotDePasse" autocomplete="new-password" required minlength="6">
+
+        <label for="confirmationMotDePasse">Confirmer le mot de passe</label>
+        <input type="password" id="confirmationMotDePasse" autocomplete="new-password" required minlength="6">
+
+        <label class="afficher">
+          <input type="checkbox" class="voir-mdp">
+          <span>Afficher les mots de passe</span>
+        </label>
+
+        <p class="erreur" id="erreurCreation" role="alert"></p>
+        <button type="submit" class="bouton principal">Créer l'accès</button>
+      </form>
+
+      <!-- Utilisations suivantes : se connecter -->
+      <form id="formConnexion" autocomplete="on" hidden>
+        <h2>Connexion</h2>
+
+        <label for="utilisateur">Nom d'utilisateur</label>
+        <input type="text" id="utilisateur" autocomplete="username" autocapitalize="none" required>
+
+        <label for="motDePasse">Mot de passe</label>
+        <input type="password" id="motDePasse" autocomplete="current-password" required>
+
+        <label class="afficher">
+          <input type="checkbox" class="voir-mdp">
+          <span>Afficher le mot de passe</span>
+        </label>
+
+        <p class="erreur" id="erreurConnexion" role="alert"></p>
+        <button type="submit" class="bouton principal">Se connecter</button>
+
+        <button type="button" class="lien-bouton" id="btnOublie">Mot de passe oublié ?</button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ============ APPLICATION (visible après connexion) ============ -->
+  <div id="application" hidden>
+
+  <!-- ============ EN-TÊTE ============ -->
+  <header class="entete">
+    <div class="entete-texte">
+      <h1>Monitoring des connexions</h1>
+      <p class="date-jour" id="dateJour"></p>
+    </div>
+    <div class="signal" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <button type="button" class="btn-deco" id="btnDeconnexion">Se déconnecter</button>
+  </header>
+
+  <main>
+
+    <!-- ============ RÉSUMÉ DU JOUR ============ -->
+    <section class="stats" aria-label="Résumé du jour">
+      <div class="stat">
+        <strong id="statVisites">0</strong>
+        <span>Visites</span>
+      </div>
+      <div class="stat stat-ok">
+        <strong id="statOk">0</strong>
+        <span>En service</span>
+      </div>
+      <div class="stat stat-ko">
+        <strong id="statKo">0</strong>
+        <span>Hors service</span>
+      </div>
+      <div class="stat">
+        <strong id="statDebit">–</strong>
+        <span>Débit moyen (Mbps)</span>
+      </div>
+    </section>
+
+    <!-- ============ FORMULAIRE DE VISITE ============ -->
+    <section class="bloc" aria-labelledby="titreVisite">
+      <h2 id="titreVisite">Nouvelle visite</h2>
+
+      <form id="formVisite" autocomplete="off">
+
+        <!-- 1. Le lieu -->
+        <fieldset>
+          <legend>Lieu</legend>
+
+          <label for="adresse">Adresse</label>
+          <input type="text" id="adresse" name="adresse" required>
+        </fieldset>
+
+        <!-- 2. État de la connexion -->
+        <fieldset>
+          <legend>La connexion fonctionne ?</legend>
+          <div class="choix">
+            <label class="option">
+              <input type="radio" name="connexion" value="Oui" required>
+              <span>Oui</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="connexion" value="Non">
+              <span>Non</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 3. Test de débit -->
+        <fieldset>
+          <legend>Test de débit</legend>
+
+          <a class="lien-test" href="https://fast.com" target="_blank" rel="noopener">
+            Ouvrir Fast.com pour lancer le test
+          </a>
+
+          <label for="debit">Débit mesuré</label>
+          <div class="jauge">
+            <input type="number" id="debit" name="debit" step="0.01" min="0" inputmode="decimal" placeholder="0">
+            <span class="unite">Mbps</span>
+          </div>
+        </fieldset>
+
+        <!-- 4. Description de la panne (dépannage) -->
+        <fieldset>
+          <legend>Dépannage</legend>
+          <label for="panne">Description de la panne</label>
+          <textarea id="panne" name="panne" rows="3" placeholder="Laisser vide s'il n'y a pas eu de dépannage"></textarea>
+        </fieldset>
+
+        <!-- 5. Demande du client -->
+        <fieldset>
+          <legend>Demande du client</legend>
+          <label for="demande">Description de la demande</label>
+          <textarea id="demande" name="demande" rows="3" placeholder="Laisser vide si le client n'a rien demandé"></textarea>
+        </fieldset>
+
+        <button type="submit" class="bouton principal">Enregistrer la visite</button>
+      </form>
+    </section>
+
+    <!-- ============ VISITES DU JOUR ============ -->
+    <section class="bloc" aria-labelledby="titreListe">
+      <h2 id="titreListe">Visites du jour <span class="compteur" id="compteur">0</span></h2>
+
+      <p class="vide" id="messageVide">Aucune visite enregistrée aujourd'hui.</p>
+
+      <div class="defilement">
+        <table id="tableVisites" hidden>
+          <thead>
+            <tr>
+              <th>Heure</th>
+              <th>Adresse</th>
+              <th>Connexion</th>
+              <th>Débit (Mbps)</th>
+              <th>Panne</th>
+              <th>Demande</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="corpsTable"></tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="bouton principal" id="btnExport">Exporter en Excel</button>
+        <button type="button" class="bouton secondaire" id="btnVider">Vider la journée</button>
+      </div>
+    </section>
+
+  </main>
+
+  </div><!-- fin #application -->
+
+  <!-- Bibliothèque qui fabrique le fichier Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

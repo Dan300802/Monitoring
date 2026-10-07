@@ -1,0 +1,864 @@
+/* ==========================================================
+   Monitoring des connexions - styles.css
+   Direction : vert profond + or (signal fort), lisible en plein soleil.
+   Conçu d'abord pour le téléphone, puis élargi pour tablette/PC.
+   ========================================================== */
+
+:root {
+  --nuit: #062b22;
+  --nuit-2: #0b4637;
+  --vert: #0f5c47;
+  --or: #f2b705;
+  --or-vif: #ffca2c;
+  --fond: #ecf1ee;
+  --carte: #ffffff;
+  --champ: #f6f9f7;
+  --encre: #0e1f1a;
+  --douce: #5a6e66;
+  --trait: #d3ddd8;
+  --ok: #139b5b;
+  --ok-fond: #ddf4e8;
+  --ko: #dc3b41;
+  --ko-fond: #fce5e6;
+  --ombre: 0 10px 28px rgba(6, 43, 34, 0.1);
+  --police: "Manrope", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --titre: "Sora", "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--encre);
+  font-family: var(--police);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================
+   EN-TÊTE : ondes de signal + barres qui montent
+   ========================================================== */
+.entete {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.2rem 5.2rem;
+  color: #fff;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(242, 183, 5, 0.22), transparent 45%),
+    repeating-radial-gradient(
+      circle at 100% 100%,
+      transparent 0 38px,
+      rgba(255, 255, 255, 0.06) 38px 40px
+    ),
+    linear-gradient(160deg, var(--nuit-2), var(--nuit));
+}
+
+.entete-texte {
+  position: relative;
+  z-index: 1;
+}
+
+.entete h1 {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--titre);
+  font-size: clamp(1.7rem, 7vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.date-jour {
+  margin: 0.6rem 0 0;
+  color: #a9c8bc;
+  font-size: 0.98rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Barres de signal : le seul mouvement de la page, au chargement */
+.signal {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.signal span {
+  display: block;
+  width: 10px;
+  border-radius: 4px;
+  background: var(--or-vif);
+  transform-origin: bottom;
+  animation: monter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.signal span:nth-child(1) { height: 20%; animation-delay: 0.05s; }
+.signal span:nth-child(2) { height: 40%; animation-delay: 0.15s; }
+.signal span:nth-child(3) { height: 60%; animation-delay: 0.25s; }
+.signal span:nth-child(4) { height: 80%; animation-delay: 0.35s; }
+.signal span:nth-child(5) { height: 100%; animation-delay: 0.45s; }
+
+@keyframes monter {
+  from { transform: scaleY(0); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+
+/* ==========================================================
+   MISE EN PAGE
+   ========================================================== */
+main {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
+  margin: -3.2rem auto 0;
+  padding: 0 0.8rem 3.5rem;
+}
+
+/* ---------- Résumé du jour ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  padding: 0.85rem 1rem;
+  background: var(--carte);
+  border-left: 5px solid var(--or);
+  border-radius: 14px;
+  box-shadow: var(--ombre);
+}
+
+.stat strong {
+  display: block;
+  font-family: var(--titre);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.stat span {
+  color: var(--douce);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.stat-ok { border-left-color: var(--ok); }
+.stat-ok strong { color: var(--ok); }
+.stat-ko { border-left-color: var(--ko); }
+.stat-ko strong { color: var(--ko); }
+
+/* ---------- Blocs ---------- */
+.bloc {
+  margin-bottom: 1rem;
+  padding: 1.2rem 1rem;
+  background: var(--carte);
+  border: 1px solid var(--trait);
+  border-radius: 18px;
+  box-shadow: var(--ombre);
+}
+
+.bloc h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.2rem;
+  font-family: var(--titre);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* ==========================================================
+   FORMULAIRE : 5 étapes numérotées
+   ========================================================== */
+#formVisite {
+  counter-reset: etape;
+}
+
+fieldset {
+  counter-increment: etape;
+  min-width: 0;
+  margin: 0 0 1.3rem;
+  padding: 0 0 1.3rem;
+  border: 0;
+  border-bottom: 1px dashed var(--trait);
+}
+
+legend {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+  padding: 0;
+  font-family: var(--titre);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+legend::before {
+  content: counter(etape);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--nuit);
+  color: var(--or-vif);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0 0.3rem;
+  color: var(--douce);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--trait);
+  border-radius: 12px;
+  background: var(--champ);
+  color: var(--encre);
+  font: inherit;
+  font-size: 1rem; /* 16 px minimum : pas de zoom automatique sur iPhone */
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8da097;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--vert);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(15, 92, 71, 0.16);
+}
+
+button:focus-visible,
+a:focus-visible,
+.option input:focus-visible + span {
+  outline: 3px solid var(--or);
+  outline-offset: 3px;
+}
+
+/* ---------- Oui / Non ---------- */
+.choix {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.option {
+  position: relative;
+  flex: 1;
+  margin: 0;
+  cursor: pointer;
+}
+
+.option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 58px;
+  border: 1.5px solid var(--trait);
+  border-radius: 14px;
+  background: var(--champ);
+  color: var(--encre);
+  font-family: var(--titre);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.option input[value="Oui"] + span::before { content: "✓"; font-size: 1.3rem; }
+.option input[value="Non"] + span::before { content: "✕"; font-size: 1.15rem; }
+
+.option input[value="Oui"]:checked + span {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(19, 155, 91, 0.35);
+}
+
+.option input[value="Non"]:checked + span {
+  background: var(--ko);
+  border-color: var(--ko);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(220, 59, 65, 0.35);
+}
+
+/* ---------- Lien Fast.com ---------- */
+.lien-test {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  margin-bottom: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  background: var(--nuit);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.lien-test::after {
+  content: "↗";
+  color: var(--or-vif);
+  font-size: 1.15rem;
+}
+
+.lien-test:hover {
+  background: var(--nuit-2);
+}
+
+/* ---------- Afficheur de débit ---------- */
+.jauge {
+  position: relative;
+}
+
+.jauge input {
+  min-height: 78px;
+  padding: 0.5rem 5.6rem 0.5rem 1rem;
+  border-width: 2px;
+  font-family: var(--titre);
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.jauge input::-webkit-outer-spin-button,
+.jauge input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.jauge input::placeholder {
+  color: #c2cec8;
+}
+
+.jauge .unite {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: var(--douce);
+  font-family: var(--titre);
+  font-size: 1rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* ---------- Boutons ---------- */
+.bouton {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.75rem 1.3rem;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  font-family: var(--titre);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.15s, background 0.15s;
+}
+
+.bouton:active {
+  transform: translateY(2px);
+}
+
+.bouton.principal {
+  background: linear-gradient(180deg, var(--or-vif), var(--or));
+  color: var(--nuit);
+  box-shadow:
+    0 10px 22px rgba(242, 183, 5, 0.38),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.bouton.principal:hover {
+  filter: brightness(1.05);
+}
+
+.bouton.secondaire {
+  background: #fff;
+  border-color: var(--ko);
+  color: var(--ko);
+}
+
+.bouton.secondaire:hover {
+  background: var(--ko-fond);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+
+/* ==========================================================
+   LISTE DES VISITES
+   ========================================================== */
+.compteur {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.9rem;
+  height: 1.9rem;
+  padding: 0 0.55rem;
+  border-radius: 999px;
+  background: var(--nuit);
+  color: var(--or-vif);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.vide {
+  margin: 0;
+  padding: 1.6rem 1rem;
+  border: 2px dashed var(--trait);
+  border-radius: 14px;
+  color: var(--douce);
+  font-weight: 600;
+  text-align: center;
+}
+
+.defilement {
+  overflow-x: auto;
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.75rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--trait);
+}
+
+th {
+  background: var(--nuit);
+  color: #cfe5db;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+  background: #f5f9f7;
+}
+
+td:first-child {
+  font-family: var(--titre);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Pastilles Oui / Non (ajoutées par le JavaScript) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge-oui { background: var(--ok-fond); color: var(--ok); }
+.badge-non { background: var(--ko-fond); color: var(--ko); }
+
+/* Bouton de suppression d'une ligne (ajouté par le JavaScript) */
+.btn-suppr {
+  min-height: 42px;
+  padding: 0.3rem 0.9rem;
+  border: 1.5px solid var(--ko);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ko);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-suppr:hover {
+  background: var(--ko-fond);
+}
+
+/* ==========================================================
+   TÉLÉPHONE : le tableau devient une pile de fiches
+   Le JavaScript met data-label="Heure", "Adresse"... sur chaque
+   cellule, et la classe "ok" ou "ko" sur chaque ligne (tr).
+   ========================================================== */
+@media (max-width: 700px) {
+  .defilement {
+    overflow-x: visible;
+  }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  tr,
+  tbody tr:nth-child(even) {
+    margin-bottom: 0.9rem;
+    overflow: hidden;
+    background: var(--carte);
+    border: 1px solid var(--trait);
+    border-left: 6px solid var(--trait);
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(6, 43, 34, 0.06);
+  }
+
+  tr.ok { border-left-color: var(--ok); }
+  tr.ko { border-left-color: var(--ko); }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0.9rem;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--douce);
+    font-weight: 700;
+    text-align: left;
+  }
+
+  td:last-child {
+    justify-content: flex-end;
+    border-bottom: 0;
+  }
+
+  td:last-child::before {
+    content: none;
+  }
+}
+
+/* ==========================================================
+   TABLETTE ET ORDINATEUR
+   ========================================================== */
+@media (min-width: 701px) {
+  .entete {
+    padding: 2.6rem 2.5rem 6rem;
+  }
+
+  .signal {
+    height: 84px;
+    gap: 8px;
+  }
+
+  .signal span {
+    width: 14px;
+  }
+
+  main {
+    margin-top: -3.8rem;
+    padding: 0 1.2rem 4rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .stat strong {
+    font-size: 2.3rem;
+  }
+
+  .bloc {
+    padding: 1.8rem;
+  }
+
+  /* Formulaire en grille : 3 colonnes puis 2 colonnes */
+  #formVisite {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 2rem;
+  }
+
+  fieldset {
+    grid-column: span 2;
+    border-bottom: 0;
+    margin-bottom: 0.8rem;
+  }
+
+  fieldset:nth-of-type(4),
+  fieldset:nth-of-type(5) {
+    grid-column: span 3;
+  }
+
+  #formVisite .bouton[type="submit"] {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: auto;
+    min-width: 300px;
+  }
+
+  .actions {
+    flex-direction: row;
+  }
+
+  .actions .bouton {
+    width: auto;
+    min-width: 220px;
+  }
+}
+
+/* ---------- Respect des préférences de mouvement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================
+   MESSAGE DE CONFIRMATION (ajouté par le JavaScript)
+   ========================================================== */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.2rem;
+  z-index: 10;
+  max-width: calc(100% - 2rem);
+  padding: 0.85rem 1.3rem;
+  border-radius: 14px;
+  background: var(--nuit);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 14px 30px rgba(6, 43, 34, 0.35);
+  transform: translate(-50%, 140%);
+  opacity: 0;
+  transition: transform 0.25s, opacity 0.25s;
+  pointer-events: none;
+}
+
+.toast.visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.toast-erreur {
+  background: var(--ko);
+}
+
+.bouton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ==========================================================
+   ÉCRAN D'ACCÈS (création du compte et connexion)
+   ========================================================== */
+.acces {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.2rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(242, 183, 5, 0.22), transparent 45%),
+    repeating-radial-gradient(
+      circle at 100% 100%,
+      transparent 0 38px,
+      rgba(255, 255, 255, 0.06) 38px 40px
+    ),
+    linear-gradient(160deg, var(--nuit-2), var(--nuit));
+}
+
+.acces-carte {
+  width: 100%;
+  max-width: 430px;
+  padding: 1.8rem 1.4rem 1.5rem;
+  background: var(--carte);
+  border-radius: 22px;
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4);
+}
+
+.acces-carte .signal {
+  height: 46px;
+  margin-bottom: 1rem;
+}
+
+.acces-carte .signal span {
+  width: 9px;
+  background: var(--or);
+}
+
+.acces-carte h1 {
+  margin: 0 0 1.2rem;
+  font-family: var(--titre);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.acces-carte h2 {
+  margin: 0;
+  color: var(--vert);
+  font-family: var(--titre);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.aide {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--douce);
+  font-size: 0.92rem;
+}
+
+.afficher {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.9rem 0 0;
+  cursor: pointer;
+}
+
+.afficher input {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--vert);
+}
+
+.erreur {
+  min-height: 1.5rem;
+  margin: 0.7rem 0 0.8rem;
+  color: var(--ko);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.lien-bouton {
+  display: block;
+  min-height: 44px;
+  margin: 0.9rem auto 0;
+  padding: 0.4rem 0.6rem;
+  border: 0;
+  background: none;
+  color: var(--vert);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Bouton de déconnexion dans l'en-tête */
+.btn-deco {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 2;
+  min-height: 40px;
+  padding: 0.3rem 0.9rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-deco:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
