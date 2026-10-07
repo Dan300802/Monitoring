@@ -862,3 +862,178 @@ td:first-child {
 .btn-deco:hover {
   background: rgba(255, 255, 255, 0.18);
 }
+
+/* ==========================================================
+   TÉLÉPHONE : écritures et éléments plus petits
+   (placé en dernier pour remplacer les tailles de départ)
+   ========================================================== */
+@media (max-width: 700px) {
+  html {
+    font-size: 14px; /* réduit tout ce qui est calculé en rem */
+  }
+
+  /* En-tête */
+  .entete {
+    padding: 1.4rem 1rem 4.2rem;
+  }
+
+  .entete h1 {
+    font-size: 1.55rem;
+  }
+
+  .date-jour {
+    font-size: 0.85rem;
+  }
+
+  .signal {
+    height: 46px;
+    gap: 5px;
+  }
+
+  .signal span {
+    width: 8px;
+  }
+
+  .btn-deco {
+    min-height: 34px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  /* Résumé du jour */
+  .stat {
+    padding: 0.65rem 0.8rem;
+  }
+
+  .stat strong {
+    font-size: 1.5rem;
+  }
+
+  .stat span {
+    font-size: 0.74rem;
+  }
+
+  /* Blocs et titres */
+  .bloc {
+    padding: 1rem 0.85rem;
+  }
+
+  .bloc h2 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  legend {
+    font-size: 0.98rem;
+  }
+
+  legend::before {
+    width: 26px;
+    height: 26px;
+    font-size: 0.78rem;
+  }
+
+  label {
+    font-size: 0.84rem;
+  }
+
+  /* Champs : 16 px minimum, sinon le téléphone zoome tout seul à la saisie */
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+    min-height: 46px;
+    padding: 0.55rem 0.8rem;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 84px;
+  }
+
+  /* Oui / Non */
+  .option span {
+    min-height: 48px;
+    font-size: 0.98rem;
+  }
+
+  .option input[value="Oui"] + span::before {
+    font-size: 1.1rem;
+  }
+
+  .option input[value="Non"] + span::before {
+    font-size: 1rem;
+  }
+
+  /* Test de débit */
+  .lien-test {
+    min-height: 46px;
+    font-size: 0.9rem;
+  }
+
+  .jauge input {
+    min-height: 62px;
+    padding-right: 4.6rem;
+    font-size: 1.7rem;
+  }
+
+  .jauge .unite {
+    font-size: 0.82rem;
+  }
+
+  /* Boutons */
+  .bouton {
+    min-height: 48px;
+    font-size: 0.95rem;
+  }
+
+  /* Fiches des visites */
+  td {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.86rem;
+  }
+
+  .badge {
+    font-size: 0.78rem;
+  }
+
+  .btn-suppr {
+    min-height: 36px;
+    font-size: 0.8rem;
+  }
+
+  .compteur {
+    min-width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.8rem;
+  }
+
+  .vide {
+    padding: 1.2rem 0.8rem;
+    font-size: 0.88rem;
+  }
+
+  /* Écran d'accès */
+  .acces-carte {
+    padding: 1.4rem 1.1rem 1.2rem;
+  }
+
+  .acces-carte h1 {
+    font-size: 1.3rem;
+  }
+
+  .acces-carte h2 {
+    font-size: 1rem;
+  }
+
+  .aide,
+  .erreur {
+    font-size: 0.84rem;
+  }
+
+  /* Message de confirmation */
+  .toast {
+    padding: 0.7rem 1.1rem;
+    font-size: 0.88rem;
+  }
+}
